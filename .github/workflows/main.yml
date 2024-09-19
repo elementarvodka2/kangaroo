@@ -1,0 +1,27 @@
+name: Build Kangaroo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Visual Studio
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 'latest'
+
+    - name: Install CUDA SDK
+      run: |
+        choco install cuda --version=11.2.2
+
+    - name: Build with MSBuild
+      run: |
+        MSBuild.exe Kangaroo.sln /p:Configuration=Release
